@@ -1,0 +1,7 @@
+/target/
+/data/*
+/.metadata/
+.DS_Store
+/logs/
+
+.aws/

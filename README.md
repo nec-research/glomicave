@@ -6,7 +6,7 @@ Here we describe how to run the software developed under Work Package 2 to build
 
 Created GLOMICAVE Knowledge Graph is used as the basis for a literature search to examine the evidence for the hypotheses generated using GLOMICAVE platform tools.
 
-## Lisence
+## License
 
 This code is provided under GPL-3 license.
 

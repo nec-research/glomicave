@@ -8,7 +8,7 @@ Created GLOMICAVE Knowledge Graph is used as the basis for a literature search t
 
 ## License
 
-This code is provided under GPL-3 license.
+All code is provided under GPL-3 license.
 
 
 ## Java version
@@ -42,7 +42,7 @@ java -jar glomicave-kg [-ahilV]
 Below we describe the parameters and the options of the pipeline running command.
 
 ```
-      <pipelineName>       Name of the pipeline to run.
+  <pipelineName>           Name of the pipeline to run.
                            Should be one of: 'full'| 'addPublications' | 'addOntology' | 'addTraits' | 'loadFacts'.
 
   -a, --abridge            Run shortend version of the pipeline to test only.
@@ -128,6 +128,7 @@ Instead of Amazon Neptune it's possibe to use Neo4J instance as the graph databa
 
 Settings to allow access to the AWS on the machine or inside a Docker container where the code will be executed.
 
+TBD
 
 
 #### 1. Running 'full' pipeline
@@ -435,24 +436,23 @@ addTraits
 Create file with logger settings, where one can put the path to the folder where to store application logs.
 
 
-
+TBD
 
 ### Configurations for the S3 object storage
 
 
 
+TBD
 
 
 
-
-## External ontology data
-
-
-- 'data\ncbi\gene_info' can be downloaded from https://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
+## External ontology files
 
 
+TBD
 
-### Publication data
+
+### Publication DOIs file
 
 DOIs should be provided in a text file, each doi should be exactly of the following format:
 
@@ -471,6 +471,4 @@ DOIs should be provided in a text file, each doi should be exactly of the follow
 ## Building docker image and running the tool from docker container
 
 
-
-
-
+TBD

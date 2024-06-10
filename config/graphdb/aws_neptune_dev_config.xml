@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="graphdb">neptune</entry>
+<entry key="server_address">127.0.0.1</entry>
+<entry key="server_port">8182</entry>
+<entry key="auth_mode">DEFAULT</entry>
+<entry key="ssl">true</entry>
+<entry key="aws_region">eu-west-1</entry>
+</properties>

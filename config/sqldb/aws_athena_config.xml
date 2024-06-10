@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="athena_s3_bucket">s3://glomicave-storage-nec</entry>
+<entry key="athena_tables_s3_prefix">gold/tables/</entry>
+<entry key="athena_output_s3_prefix">gold/tables/query_logs/</entry>
+<entry key="workgroup">nec</entry>
+<entry key="layer">gold</entry>
+<entry key="database_prefix">nec</entry>
+</properties>

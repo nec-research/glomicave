@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n</Property>
+    </Properties>
+ 
+    <Appenders>
+        <Console name="consoleLogger" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <RollingFile name="rollingFileLogger" 
+            fileName="logs/app.log"
+            filePattern="logs/app-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+        </RollingFile>
+
+        <File name="fileLogger" fileName="logs/errors.log" bufferedIO="false" append="false">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+
+        <File name="filePubLogger" fileName="logs/publications.log" bufferedIO="false" append="false">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+    </Appenders>
+
+
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="consoleLogger" level="info"/>
+            <AppenderRef ref="fileLogger" level="error"/>
+            <AppenderRef ref="rollingFileLogger" level="info"/>
+        </Root>
+
+        <Logger name="eu.glomicave.persistence.PublicationDatabase" level="info" additivity="false">
+            <AppenderRef ref="consoleLogger" level="info"/>
+            <AppenderRef ref="filePubLogger" level="info"/>
+        </Logger>
+
+    </Loggers>
+
+</Configuration>

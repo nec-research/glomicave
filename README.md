@@ -21,7 +21,7 @@ JavaSE-15 (tested with Java SE 17.0.3).
 To run data extraction we developed a command-line tool ```glomicave-kg``` packaged as Java jar file that can be run using folliwing synax:
 
 ```
-java -jar glomicave-kg.java [-ahilV]
+java -jar glomicave-kg.jar [-ahilV]
                     [-t=<pool_size>]  
                     [--cfg_logs=<cfg_logger_file>] 
                     [--cfg_s3=<cfg_s3_file>]

@@ -131,17 +131,17 @@ Settings to allow access to the AWS on the machine or inside a Docker container 
 TBD
 
 
-#### 1. Running 'full' pipeline
+#### Running 'full' pipeline
 
 
-Here is an example of running full end-to-end cloud-integrated pipeline to build knowledge graph from external ontologies and provided paper abstracts. Some steps will be executed in paraller within 5 threads.
+Here is an example of running full end-to-end cloud-integrated pipeline to build knowledge graph from external ontologies and provided paper abstracts.
 
 We assume that folders `logs, config` and relevan subfolders that contain configuration files have been created inside the directory with the executable .JAR file. Deafult logger configuration assumes that all application logs will be written into `logs` folder.
 
 ```
 java -jar glomicave-kg 
 --cfg_s3 "./config/s3/aws_s3_config.xml" 
---cfg_sqldb "./config/sqldb/aws_athena_gold_config.xml" 
+--cfg_sqldb "./config/sqldb/aws_athena_config.xml" 
 --cfg_graphdb "./config/graphdb/graphdb_config.xml" 
 --gene_ontology "raw/data/ontologies/nle-bio-kg/gene-info.csv" 
 --ec_codes "raw/data/ontologies/ec-codes/ec-enzymes.csv" 
@@ -154,10 +154,10 @@ java -jar glomicave-kg
 full
 ```
 
-**Note 1.** Use option `-a` to test the pipeline execution with the limited amount of data. Given that option it will use only first 100 records from each ontology and retrieve limited information from only 5 publications and no more than 2 citing or referenced papers. 
 
-**Note 2.** This will always clear existing publication data from SQL database and rebuild the knowledge graph from stratch in the graph database. 
+**Note 1.** Running this pipeline will always clear existing publication data from SQL database and rebuild the knowledge graph from stratch in the graph database. 
 
+**Note 2.** Use option `-a` to test the pipeline execution with the limited amount of data. Given that option it will use only first 100 records from each ontology and retrieve limited information from only 5 publications and no more than 2 citing or referenced papers. 
 
 To check created node types we can execute the following commands in the final graph database:
 
@@ -165,7 +165,7 @@ To check created node types we can execute the following commands in the final g
 MATCH (n) RETURN distinct labels(n), count(*);
 ```
 
-Sample output (option `-a` was given to run the pipeline):
+Sample output:
 
 ```
 ╒═══════════════════════════════════════════╤════════╕
@@ -193,13 +193,13 @@ Sample output (option `-a` was given to run the pipeline):
 └───────────────────────────────────────────┴────────┘
 ```
 
-And for created relation types can be calculated with:
+Statistics on the relation types can be obtained with the following command:
 
 ```
 MATCH (n)-[r]->(m) RETURN distinct type(r), count(*);
 ```
 
-Sample output (option `-a` was given to run the pipeline):
+Sample output:
 
 ```
 ╒═════════════════════╤════════╕
@@ -220,8 +220,8 @@ Sample output (option `-a` was given to run the pipeline):
 ```
 
 
-
-#### 2. Running 'addOntology' pipeline
+#### Other pipeline versions
+##### 1. Running 'addOntology' pipeline
 
 This pipline version can be used when we need to integrate data from extra ontology to the existing knowledge graph without rebuilding it from scratch.
 
@@ -242,7 +242,7 @@ addOntology
 **Note.** Remove `-a` option to run the pipeline without restrictions on the number of entities to analyse.
 
 
-#### 3. Running 'addPublications' pipeline
+##### 2. Running 'addPublications' pipeline
 
 This pipline version can be used when we need to update the knowledge graph with new publication data.
 
@@ -256,7 +256,7 @@ List of DOIs of new papers should be recorded into a text file (one DOI per row,
 ```
 java -jar glomicave-kg 
 --cfg_s3 "./config/s3/aws_s3_config.xml"  
---cfg_sqldb "./config/sqldb/aws_athena_gold_config.xml" 
+--cfg_sqldb "./config/sqldb/aws_athena_config.xml" 
 --cfg_graphdb "./config/graphdb/graphdb_config.xml" 
 --dois "raw/data/publications/updates/publications-add-1.txt" 
 --nrefs 10 
@@ -267,7 +267,7 @@ addPublications
 ```
 
 
-#### 4. Running 'loadFacts' pipeline
+##### 5. Running 'loadFacts' pipeline
 
 This pipline version can be used when we need to add text-mined facts using Open Information Extraction (OpenIE) into the knowledge graph.
 
@@ -283,7 +283,7 @@ loadFacts
 ```
 
 
-#### 5. Running 'addTraits' pipeline
+##### 6. Running 'addTraits' pipeline
 
 This pipline version can be used when we need to add phenotypic traits/phenotypes into the knowledge graph.
 
@@ -335,7 +335,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, INDEX, DROP, ALTER, CREATE TEMPORA
 ```
 
 
-#### 1. Running 'full' pipeline
+#### Running 'full' pipeline
 
 Here is an example of running full end-to-end pipeline to build knowledge graph on the local server.
 
@@ -359,8 +359,8 @@ java -jar glomicave-kg
 full
 ```
 
-
-#### 2. Running 'addOntology' pipeline
+#### Other pipeline versions
+##### 1. Running 'addOntology' pipeline
 
 This pipline version can be used when we need to integrate data from extra ontology to the existing knowledge graph without rebuilding it from scratch.
 
@@ -377,7 +377,7 @@ java -jar glomicave-kg
 addOntology
 ```
 
-#### 3. Running 'addPublications' pipeline
+##### 2. Running 'addPublications' pipeline
 
 This pipline version can be used when we need to update the knowledge graph with new publication data.
 
@@ -397,7 +397,7 @@ addPublications
 ```
 
 
-#### 4. Running 'loadFacts' pipeline
+##### 3. Running 'loadFacts' pipeline
 
 This pipline version can be used when we need to add text-mined facts using Open Information Extraction (OpenIE) into the knowledge graph.
 
@@ -413,7 +413,7 @@ loadFacts
 ```
 
 
-#### 5. Running 'addTraits' pipeline
+##### 4. Running 'addTraits' pipeline
 
 This pipline version can be used when we need to add phenotypic traits/phenotypes into the knowledge graph.
 
@@ -464,7 +464,7 @@ DOIs should be provided in a text file, each doi should be exactly of the follow
 
 ```
 
-**Note.** In case record will contain extra symbols, like *https://doi.org/* or *doi.org* it will be considered as a separate record and may cause duplication of the information in the database.
+**Note.** In case record contains extra symbols, like *https://doi.org/* or *doi.org* it will be considered as a separate record and may cause duplication of the information in the database.
 
 
 

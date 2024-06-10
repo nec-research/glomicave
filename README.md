@@ -565,9 +565,23 @@ further investigation,identify mecatalase1 as,protein,POSITIVE,CERTAINTY,,Furthe
 further investigation,identify mewrky20 as,protein,POSITIVE,CERTAINTY,,Further investigation identifies MeWRKY20 and MeCatalase1 as MeHSP90.9-interacting proteins.,10.1111/nph.16346/5
 ```
 
-## Building docker image and running the tool from docker container
+## Building Docker image and running the tool from Docker container
 
 The whole application can be dockerized and executed inside a Docker container.
 
 To build and run the app inside a Docker container suitable Java environment is needed. We tested the application with `eclipse-temurin:17-jdk-jammy` as a base Docker image.
+
+
+## Executable files
+
+Check Assets folder for pre-compiled executable .JAR file: https://github.com/nec-research/glomicave/releases.
+
+
+## Acknowledgment
+
+NEC Laboratories Europe GmbH, Copyright (c) 2024, All rights reserved.
+
+Developers: 
+* [Roman Siarheyeu](mailto:raman.siarheyeu@neclab.eu): raman.siarheyeu@neclab.eu
+* [Kiril Gashteovski](mailto:kiril.gashteovski@neclab.eu): kiril.gashteovski@neclab.eu
 

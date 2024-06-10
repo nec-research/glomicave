@@ -570,5 +570,5 @@ Check assets for pre-compiled executable .JAR files: https://github.com/nec-rese
 
 NEC Laboratories Europe GmbH, Copyright (c) 2024, All rights reserved.
 
-Developers: [Roman Siarheyeu](mailto:raman.siarheyeu@neclab.eu), [Kiril Gashteovski](mailto:kiril.gashteovski@neclab.eu).
+Authors: [Roman Siarheyeu](mailto:raman.siarheyeu@neclab.eu), [Kiril Gashteovski](mailto:kiril.gashteovski@neclab.eu).
 

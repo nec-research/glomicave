@@ -8,7 +8,7 @@ Created GLOMICAVE Knowledge Graph is used as the basis for a literature search t
 
 ## License
 
-All code is provided under GPL-3 license.
+We provide our code under GPL-3 license.
 
 
 ## Java version

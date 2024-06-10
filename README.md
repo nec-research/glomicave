@@ -136,7 +136,7 @@ The generated 'config' and 'credintials' files are normally put into directory ~
 
 Here is an example of running full end-to-end cloud-integrated pipeline to build knowledge graph from external ontologies and provided paper abstracts.
 
-We assume that folders `logs, config` and relevan subfolders that contain configuration files have been created inside the directory with the executable .JAR file. Deafult logger configuration assumes that all application logs will be written into `logs` folder.
+We assume that folders `logs, config` and relevant subfolders that contain configuration files have been created inside the directory with the executable .JAR file. Deafult logger configuration assumes that all application logs will be written into `logs` folder.
 
 ```
 java -jar glomicave-kg 
@@ -371,7 +371,7 @@ addTraits
 
 
 
-### Getting statistics of the knowledge graph 
+### Getting statistics on the knowledge graph 
 
 To check created node types we can execute the following commands in the final graph database:
 

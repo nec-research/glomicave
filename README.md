@@ -375,7 +375,7 @@ addTraits
 
 ### Getting statistics on the knowledge graph 
 
-To check created node types we can execute the following commands in the final graph database:
+To check created node types we can execute the following commands in the final graph database in Cypher language:
 
 ```
 MATCH (n) RETURN distinct labels(n), count(*);
@@ -423,7 +423,7 @@ Sample output:
 └──────────────────────────────────────────────┴────────┘
 ```
 
-Statistics on the relation types can be obtained with the following command:
+Statistics on the relation types can be obtained with the following Cypher command:
 
 ```
 MATCH (n)-[r]->(m) RETURN distinct type(r), count(*);

@@ -574,7 +574,7 @@ To build and run the app inside a Docker container suitable Java environment is 
 
 ## Executable files
 
-Check Assets folder for pre-compiled executable .JAR file: https://github.com/nec-research/glomicave/releases.
+Check assets for pre-compiled executable .JAR files: https://github.com/nec-research/glomicave/releases.
 
 
 ## Acknowledgment

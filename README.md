@@ -128,7 +128,7 @@ Instead of Amazon Neptune it's possibe to use Neo4J instance as the graph databa
 
 To properly set up access to the cloud resources follow the instructions to generate AWS access keys and configurations: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
 
-The generated 'config' and 'credintials' files are normally put into directory ~./aws. Normally, you should be able to use Amazon CLI tool to manage files inside the Amazon S3 bucket if access has been configured correctly.
+The generated 'config' and 'credintials' files are normally put into directory ~./aws. With properly configured access you should normally be able to use Amazon CLI tool to manage files inside the Amazon S3 bucket.
  
 
 ### Running 'full' pipeline
@@ -206,6 +206,8 @@ java -jar glomicave-kg
 --cfg_logs "./config/log4j2.xml"
 addPublications
 ```
+
+**Note.**  This pipeline can be run with `--integrate` option when you don't want to update the publications tables stored in Amazon Athena, but only need to integrate publications into the knowledge graph. This can be especially helpful when some paper records where added into the Athena tables manually.
 
 
 #### 3. 'loadFacts' pipeline
@@ -484,7 +486,7 @@ Here you can find an example of S3 configuration file: https://github.com/nec-re
 
 Data from external dictionaries before being integrated into the knowledge graph should be written into a comma-separated CSV-file of the following structure:
 
-Source, Category, UID, Name, Synonym_1, ..., Synonym_N,
+`Source, Category, UID, Name, Synonym_1, ..., Synonym_N`
 
 Each row contains information about a single entity recorded in columns:
 * Source: name of the original database, ontology of a dataset. It will be added as a prefix into the entity ID in the knowledge graph.
@@ -495,18 +497,18 @@ Each row contains information about a single entity recorded in columns:
 
 
 Example:
-
+```
 source,category,uid,name,syn_0,syn_1,syn_2,syn_3,syn_4,syn_5,syn_6,syn_7
 UNIPROT,PROTEIN,A0A009IHW8,ABTIR_ACIB9,2' cyclic ADP-D-ribose synthase AbTIR,2'cADPR synthase AbTIR,EC 3.2.2.-,NAD(+) hydrolase AbTIR,EC 3.2.2.6,TIR domain-containing protein in A.baumannii,AbTIR
 UNIPROT,PROTEIN,A0A023I7E1,ENG1_RHIMI,"Glucan endo-1,3-beta-D-glucosidase 1","Endo-1,3-beta-glucanase 1",EC 3.2.1.39,Laminarinase,RmLam81A,,,
 UNIPROT,PROTEIN,A0A024SC78,CUTI1_HYPJR,Cutinase,EC 3.1.1.74,,,,,,
-
+```
 
 ### Phenotypes/Traits
 
 List of phenotypes ot traits before being integrated into the knowledge graph should be written into a comma-separated CSV-file of the following structure:
 
-Id, Symbol, Name, Synonyms
+`Id, Symbol, Name, Synonyms`
 
 Each row contains information about a single trait recorder in columns:
 * Id: Train index.
@@ -515,12 +517,12 @@ Each row contains information about a single trait recorder in columns:
 * Synonyms: Semicolon-separated list of synonyms that name the trait.
 
 Example:
-
+```
 Id,Symbol,Name,Synonyms
 1,BC1_A_1,Calf birth weight,birth weight
 2,BC1_A_2,Gestation length,
 3,BC5_A_1,"Concentration levels of phosphate, nitrite, nitrate, ammonium, oxygen",phosphate; nitrite; ammonium;  oxygen
-
+```
 
 ### Publication DOIs file
 
@@ -541,7 +543,7 @@ DOIs should be provided in a text file, each doi should be exactly of the follow
 
 Text-mined facts are normally represanted by OpenIE systems as triples of (Subject, Relation, Object). Here we describe the structure of a comma-separated CSV-file that should be used to integrate OpenIE-derived facts into the knowledge graph:
 
-Subject, Relation, Object, Polarity, Modality, Attribution, Sentence, SentenceUID
+`Subject, Relation, Object, Polarity, Modality, Attribution, Sentence, SentenceUID`
 
 Each row contains information about a single fact recorder in following columns:
 
@@ -556,13 +558,12 @@ Each row contains information about a single fact recorder in following columns:
 
 
 Example:
-
+```
 subject,relation,object,polarity,modality,attribution,sentence,uid
 abscisic acid,be,aba,POSITIVE,CERTAINTY,,"In this study, we report that HSP90 is essential for drought stress resistance in cassava by regulating abscisic acid (ABA) and hydrogen peroxide (H2 O2 ) using two specific protein inhibitors of HSP90 (geldanamycin (GDA) and radicicol (RAD)).",10.1111/nph.16346/3
 further investigation,identify mecatalase1 as,protein,POSITIVE,CERTAINTY,,Further investigation identifies MeWRKY20 and MeCatalase1 as MeHSP90.9-interacting proteins.,10.1111/nph.16346/5
 further investigation,identify mewrky20 as,protein,POSITIVE,CERTAINTY,,Further investigation identifies MeWRKY20 and MeCatalase1 as MeHSP90.9-interacting proteins.,10.1111/nph.16346/5
-
-
+```
 
 ## Building docker image and running the tool from docker container
 

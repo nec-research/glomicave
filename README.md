@@ -21,7 +21,7 @@ JavaSE-15 (tested with Java SE 17.0.3).
 To run data extraction we developed a command-line tool ```glomicave-kg``` packaged as Java jar file that can be run using folliwing synax:
 
 ```
-java -jar glomicave-kg [-ahilV]
+java -jar glomicave-kg.java [-ahilV]
                     [-t=<pool_size>]  
                     [--cfg_logs=<cfg_logger_file>] 
                     [--cfg_s3=<cfg_s3_file>]
@@ -133,7 +133,6 @@ The generated 'config' and 'credintials' files are normally put into directory ~
 
 ### Running 'full' pipeline
 
-
 Here is an example of running full end-to-end cloud-integrated pipeline to build knowledge graph from external ontologies and provided paper abstracts.
 
 We assume that folders `logs, config` and relevant subfolders that contain configuration files have been created inside the directory with the executable .JAR file. Deafult logger configuration assumes that all application logs will be written into `logs` folder.
@@ -224,7 +223,6 @@ java -jar glomicave-kg.jar \
 --cfg_logs "./config/log4j2.xml" \
 loadFacts
 ```
-
 
 #### 4. 'addTraits' pipeline
 
@@ -339,7 +337,6 @@ java -jar glomicave-kg.jar \
 addPublications
 ```
 
-
 #### 3. 'loadFacts' pipeline
 
 This pipline version is used to integrate text-mined facts obtained using OpenIE system into the knowledge graph.
@@ -354,7 +351,6 @@ java -jar glomicave-kg.jar \
 --cfg_logs "./config/log4j2.xml" \
 loadFacts
 ```
-
 
 #### 4. 'addTraits' pipeline
 
@@ -372,17 +368,14 @@ addTraits
 ```
 
 
-
 ### Getting statistics on the knowledge graph 
 
 To check created node types we can execute the following commands in the final graph database in Cypher language:
-
 ```
 MATCH (n) RETURN distinct labels(n), count(*);
 ```
 
 Sample output:
-
 ```
 ╒══════════════════════════════════════════════╤════════╕
 │labels(n)                                     │count(*)│
@@ -424,13 +417,11 @@ Sample output:
 ```
 
 Statistics on the relation types can be obtained with the following Cypher command:
-
 ```
 MATCH (n)-[r]->(m) RETURN distinct type(r), count(*);
 ```
 
 Sample output:
-
 ```
 ╒══════════════════════╤════════╕
 │type(r)               │count(*)│
@@ -495,7 +486,6 @@ Each row contains information about a single entity recorded in columns:
 * Name: textual name or abbreviation of the entity (e.g. gene name).
 * Synonym_1, ..., Synonym_N: synonyms that may name the entity in literature or other databases.
 
-
 Example:
 ```
 source,category,uid,name,syn_0,syn_1,syn_2,syn_3,syn_4,syn_5,syn_6
@@ -555,7 +545,6 @@ Each row contains information about a single fact recorder in following columns:
 * Attribution: Context information about the fact (e.g. study outcome, hypothesis) if provided (optional).
 * Sentence: Full text a sentence from which the fact was extracted (optional).
 * SentenceUID: UID of a sentence in the knowledge graphs from which the fact was extracted (required).
-
 
 Example:
 ```

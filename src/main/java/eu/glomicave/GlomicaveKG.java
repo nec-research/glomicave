@@ -258,8 +258,8 @@ public class GlomicaveKG implements Callable<Integer> {
 		
 		
 		public static void main(String... args) throws Exception {			
-	        int exitCode = new CommandLine(new GlomicaveKG()).execute(args);
-	        System.exit(exitCode);
+			int exitCode = new CommandLine(new GlomicaveKG()).execute(args);
+			System.exit(exitCode);
 		}
 
 }

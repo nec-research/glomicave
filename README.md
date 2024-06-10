@@ -112,7 +112,7 @@ Below we describe the parameters and the options of the pipeline running command
 
 ```
 
-### Part 1. Cloud-integrated pipeline verions
+## Part 1. Cloud-integrated pipeline verions
 
 To run cloud version of the pipeline one need to configure access to Amazon account and allow working with Amazon S3 object storage, Amazon Athena query service and Amazon Neptune graph database. 
 
@@ -124,14 +124,14 @@ We assume that the listed Amazon Web Services (AWS) are used for the following p
 Instead of Amazon Neptune it's possibe to use Neo4J instance as the graph database within any cloud version of the pipeline.
 
 
-#### Amazon access settings
+### Amazon access settings
 
-Settings to allow access to the AWS on the machine or inside a Docker container where the code will be executed.
+To properly set up access to the cloud resources follow the instructions to generate AWS access keys and configurations: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
 
-TBD
+The generated 'config' and 'credintials' files are normally put into directory ~./aws. Normally, you should be able to use Amazon CLI tool to manage files inside the Amazon S3 bucket if access has been configured correctly.
+ 
 
-
-#### Running 'full' pipeline
+### Running 'full' pipeline
 
 
 Here is an example of running full end-to-end cloud-integrated pipeline to build knowledge graph from external ontologies and provided paper abstracts.
@@ -159,69 +159,10 @@ full
 
 **Note 2.** Use option `-a` to test the pipeline execution with the limited amount of data. Given that option it will use only first 100 records from each ontology and retrieve limited information from only 5 publications and no more than 2 citing or referenced papers. 
 
-To check created node types we can execute the following commands in the final graph database:
-
-```
-MATCH (n) RETURN distinct labels(n), count(*);
-```
-
-Sample output:
-
-```
-╒═══════════════════════════════════════════╤════════╕
-│labels(n)                                  │count(*)│
-╞═══════════════════════════════════════════╪════════╡
-│["NAMED_ENTITY"]                           │266     │
-├───────────────────────────────────────────┼────────┤
-│["LEXICAL_FORM"]                           │2485    │
-├───────────────────────────────────────────┼────────┤
-│["NAMED_ENTITY", "TRAIT"]                  │73      │
-├───────────────────────────────────────────┼────────┤
-│["NAMED_ENTITY", "PATHWAY"]                │40      │
-├───────────────────────────────────────────┼────────┤
-│["NAMED_ENTITY", "METABOLITE"]             │594     │
-├───────────────────────────────────────────┼────────┤
-│["GENE_PRODUCT", "NAMED_ENTITY"]           │591     │
-├───────────────────────────────────────────┼────────┤
-│["GENE_PRODUCT", "NAMED_ENTITY", "PROTEIN"]│3       │
-├───────────────────────────────────────────┼────────┤
-│["NAMED_ENTITY", "PROTEIN"]                │196     │
-├───────────────────────────────────────────┼────────┤
-│["PUBLICATION"]                            │11      │
-├───────────────────────────────────────────┼────────┤
-│["SENTENCE"]                               │105     │
-└───────────────────────────────────────────┴────────┘
-```
-
-Statistics on the relation types can be obtained with the following command:
-
-```
-MATCH (n)-[r]->(m) RETURN distinct type(r), count(*);
-```
-
-Sample output:
-
-```
-╒═════════════════════╤════════╕
-│type(r)              │count(*)│
-╞═════════════════════╪════════╡
-│"HAS_LF"             │2640    │
-├─────────────────────┼────────┤
-│"SYNONYM_WITH"       │3650    │
-├─────────────────────┼────────┤
-│"COOCCURS_WITH"      │20      │
-├─────────────────────┼────────┤
-│"APPEARS_IN"         │15      │
-├─────────────────────┼────────┤
-│"IS_PART_OF_PATHWAY" │1303    │
-├─────────────────────┼────────┤
-│"IS_PART_OF_SENTENCE"│105     │
-└─────────────────────┴────────┘
-```
 
 
-#### Other pipeline versions
-##### 1. Running 'addOntology' pipeline
+### Other pipeline versions
+#### 1. 'addOntology' pipeline
 
 This pipline version can be used when we need to integrate data from extra ontology to the existing knowledge graph without rebuilding it from scratch.
 
@@ -242,7 +183,7 @@ addOntology
 **Note.** Remove `-a` option to run the pipeline without restrictions on the number of entities to analyse.
 
 
-##### 2. Running 'addPublications' pipeline
+#### 2. 'addPublications' pipeline
 
 This pipline version can be used when we need to update the knowledge graph with new publication data.
 
@@ -267,9 +208,9 @@ addPublications
 ```
 
 
-##### 5. Running 'loadFacts' pipeline
+#### 3. 'loadFacts' pipeline
 
-This pipline version can be used when we need to add text-mined facts using Open Information Extraction (OpenIE) into the knowledge graph.
+This pipline version is used to integrate text-mined facts obtained using Open Information Extraction (OpenIE) system into the knowledge graph.
 
 List of OpenIE-mined facts should be provided in a CSV-file of a special structure (see file format examples) using `--facts` option.
 
@@ -283,7 +224,7 @@ loadFacts
 ```
 
 
-##### 6. Running 'addTraits' pipeline
+#### 4. 'addTraits' pipeline
 
 This pipline version can be used when we need to add phenotypic traits/phenotypes into the knowledge graph.
 
@@ -335,7 +276,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, INDEX, DROP, ALTER, CREATE TEMPORA
 ```
 
 
-#### Running 'full' pipeline
+### Running 'full' pipeline
 
 Here is an example of running full end-to-end pipeline to build knowledge graph on the local server.
 
@@ -359,8 +300,8 @@ java -jar glomicave-kg
 full
 ```
 
-#### Other pipeline versions
-##### 1. Running 'addOntology' pipeline
+### Other pipeline versions
+#### 1. 'addOntology' pipeline
 
 This pipline version can be used when we need to integrate data from extra ontology to the existing knowledge graph without rebuilding it from scratch.
 
@@ -377,7 +318,7 @@ java -jar glomicave-kg
 addOntology
 ```
 
-##### 2. Running 'addPublications' pipeline
+#### 2. 'addPublications' pipeline
 
 This pipline version can be used when we need to update the knowledge graph with new publication data.
 
@@ -397,9 +338,9 @@ addPublications
 ```
 
 
-##### 3. Running 'loadFacts' pipeline
+#### 3. 'loadFacts' pipeline
 
-This pipline version can be used when we need to add text-mined facts using Open Information Extraction (OpenIE) into the knowledge graph.
+This pipline version is used to integrate text-mined facts obtained using OpenIE system into the knowledge graph.
 
 List of OpenIE-mined facts should be provided in a CSV-file of a special structure (see file format examples) using `--facts` option.
 
@@ -413,7 +354,7 @@ loadFacts
 ```
 
 
-##### 4. Running 'addTraits' pipeline
+#### 4. 'addTraits' pipeline
 
 This pipline version can be used when we need to add phenotypic traits/phenotypes into the knowledge graph.
 
@@ -429,27 +370,156 @@ addTraits
 ```
 
 
+
+### Getting statistics of the knowledge graph 
+
+To check created node types we can execute the following commands in the final graph database:
+
+```
+MATCH (n) RETURN distinct labels(n), count(*);
+```
+
+Sample output:
+
+```
+╒══════════════════════════════════════════════╤════════╕
+│labels(n)                                     │count(*)│
+╞══════════════════════════════════════════════╪════════╡
+│["LEXICAL_FORM"]                              │83586   │
+├──────────────────────────────────────────────┼────────┤
+│["NAMED_ENTITY"]                              │18177   │
+├──────────────────────────────────────────────┼────────┤
+│["NAMED_ENTITY", "PROTEIN"]                   │19882   │
+├──────────────────────────────────────────────┼────────┤
+│["GENE_PRODUCT", "NAMED_ENTITY"]              │33034   │
+├──────────────────────────────────────────────┼────────┤
+│["NAMED_ENTITY", "PATHWAY"]                   │2749    │
+├──────────────────────────────────────────────┼────────┤
+│["NAMED_ENTITY", "METABOLITE"]                │5687    │
+├──────────────────────────────────────────────┼────────┤
+│["GENE_PRODUCT", "NAMED_ENTITY", "PROTEIN"]   │2332    │
+├──────────────────────────────────────────────┼────────┤
+│["NAMED_ENTITY", "TRAIT"]                     │73      │
+├──────────────────────────────────────────────┼────────┤
+│["NAMED_ENTITY", "PROTEIN", "METABOLITE"]     │2       │
+├──────────────────────────────────────────────┼────────┤
+│["GENE_PRODUCT", "NAMED_ENTITY", "METABOLITE"]│1       │
+├──────────────────────────────────────────────┼────────┤
+│["GENE_PRODUCT", "NAMED_ENTITY", "PATHWAY"]   │1       │
+├──────────────────────────────────────────────┼────────┤
+│["PUBLICATION"]                               │11998   │
+├──────────────────────────────────────────────┼────────┤
+│["SENTENCE"]                                  │109725  │
+├──────────────────────────────────────────────┼────────┤
+│["FACT"]                                      │24669   │
+├──────────────────────────────────────────────┼────────┤
+│["POLARITY"]                                  │2       │
+├──────────────────────────────────────────────┼────────┤
+│["MODALITY"]                                  │2       │
+├──────────────────────────────────────────────┼────────┤
+│["ATTRIBUTION"]                               │77      │
+└──────────────────────────────────────────────┴────────┘
+```
+
+Statistics on the relation types can be obtained with the following command:
+
+```
+MATCH (n)-[r]->(m) RETURN distinct type(r), count(*);
+```
+
+Sample output:
+
+```
+╒══════════════════════╤════════╕
+│type(r)               │count(*)│
+╞══════════════════════╪════════╡
+│"SYNONYM_WITH"        │101716  │
+├──────────────────────┼────────┤
+│"HAS_LF"              │120050  │
+├──────────────────────┼────────┤
+│"COOCCURS_WITH"       │143254  │
+├──────────────────────┼────────┤
+│"APPEARS_IN"          │111083  │
+├──────────────────────┼────────┤
+│"APPEARS_IN_LOWERCASE"│8949    │
+├──────────────────────┼────────┤
+│"OIE_RELATED_WITH"    │2238    │
+├──────────────────────┼────────┤
+│"HAS_FACT"            │25285   │
+├──────────────────────┼────────┤
+│"IS_PART_OF_PATHWAY"  │114355  │
+├──────────────────────┼────────┤
+│"IS_PART_OF_SENTENCE" │109725  │
+├──────────────────────┼────────┤
+│"FACT_APPEARS_IN"     │25307   │
+├──────────────────────┼────────┤
+│"HAS_MODALITY"        │23936   │
+├──────────────────────┼────────┤
+│"HAS_POLARITY"        │23930   │
+├──────────────────────┼────────┤
+│"HAS_ATTRIBUTION"     │270     │
+└──────────────────────┴────────┘
+```
+
+
 ## Configuration files.
 
 ### Logging settings
 
 Create file with logger settings, where one can put the path to the folder where to store application logs.
 
+Here you can find an example of logger configuration file: https://github.com/nec-research/glomicave/blob/main/config/log4j2.xml
 
-TBD
 
 ### Configurations for the S3 object storage
 
+This file is used to identify Amazon S3 bucket to store the data, like input files for the cloud-integrated versions of the pipeline and Athena tables.
+
+Here you can find an example of S3 configuration file: https://github.com/nec-research/glomicave/blob/main/config/s3/aws_s3_config.xml
 
 
-TBD
+## Input file formats
+
+### External ontology files
+
+Data from external dictionaries before being integrated into the knowledge graph should be written into a comma-separated CSV-file of the following structure:
+
+Source, Category, UID, Name, Synonym_1, ..., Synonym_N,
+
+Each row contains information about a single entity recorded in columns:
+* Source: name of the original database, ontology of a dataset. It will be added as a prefix into the entity ID in the knowledge graph.
+* Category: label that should be assigned to the entity node in the graph databse. Should be one of the following: {NAMED_ENTITY, METABOLITE, GENE, GENE_PRODUCT, PROTEIN}.
+* UID: udentifier in the original database.
+* Name: textual name or abbreviation of the entity (e.g. gene name).
+* Synonym_1, ..., Synonym_N: synonyms that may name the entity in literature or other databases.
 
 
+Example:
 
-## External ontology files
+source,category,uid,name,syn_0,syn_1,syn_2,syn_3,syn_4,syn_5,syn_6,syn_7
+UNIPROT,PROTEIN,A0A009IHW8,ABTIR_ACIB9,2' cyclic ADP-D-ribose synthase AbTIR,2'cADPR synthase AbTIR,EC 3.2.2.-,NAD(+) hydrolase AbTIR,EC 3.2.2.6,TIR domain-containing protein in A.baumannii,AbTIR
+UNIPROT,PROTEIN,A0A023I7E1,ENG1_RHIMI,"Glucan endo-1,3-beta-D-glucosidase 1","Endo-1,3-beta-glucanase 1",EC 3.2.1.39,Laminarinase,RmLam81A,,,
+UNIPROT,PROTEIN,A0A024SC78,CUTI1_HYPJR,Cutinase,EC 3.1.1.74,,,,,,
 
 
-TBD
+### Phenotypes/Traits
+
+List of phenotypes ot traits before being integrated into the knowledge graph should be written into a comma-separated CSV-file of the following structure:
+
+Id, Symbol, Name, Synonyms
+
+Each row contains information about a single trait recorder in columns:
+* Id: Train index.
+* Symbol: Internal unique identifier or symbol that names the trait.
+* Name: Textual name of the trait.
+* Synonyms: Semicolon-separated list of synonyms that name the trait.
+
+Example:
+
+Id,Symbol,Name,Synonyms
+1,BC1_A_1,Calf birth weight,birth weight
+2,BC1_A_2,Gestation length,
+3,BC5_A_1,"Concentration levels of phosphate, nitrite, nitrate, ammonium, oxygen",phosphate; nitrite; ammonium;  oxygen
 
 
 ### Publication DOIs file
@@ -465,6 +535,32 @@ DOIs should be provided in a text file, each doi should be exactly of the follow
 ```
 
 **Note.** In case record contains extra symbols, like *https://doi.org/* or *doi.org* it will be considered as a separate record and may cause duplication of the information in the database.
+
+
+### OpenIE-derived facts
+
+Text-mined facts are normally represanted by OpenIE systems as triples of (Subject, Relation, Object). Here we describe the structure of a comma-separated CSV-file that should be used to integrate OpenIE-derived facts into the knowledge graph:
+
+Subject, Relation, Object, Polarity, Modality, Attribution, Sentence, SentenceUID
+
+Each row contains information about a single fact recorder in following columns:
+
+* Subject: Subject of a fact from considered triple (Subject, Relation, Object) (required).
+* Relation: Text-extracted relation of a fact from considered triple (Subject, Relation, Object) (required).
+* Object: Object of a fact from considered triple (Subject, Relation, Object) (required).
+* Polarity: Polarity of a fact (POSITIVE or NEGATIVE) if provided (optional).
+* Modality: Cernainty about a fact (CERTAINTY, POSSIBILITY) if provided (optional).
+* Attribution: Context information about the fact (e.g. study outcome, hypothesis) if provided (optional).
+* Sentence: Full text a sentence from which the fact was extracted (optional).
+* SentenceUID: UID of a sentence in the knowledge graphs from which the fact was extracted (required).
+
+
+Example:
+
+subject,relation,object,polarity,modality,attribution,sentence,uid
+abscisic acid,be,aba,POSITIVE,CERTAINTY,,"In this study, we report that HSP90 is essential for drought stress resistance in cassava by regulating abscisic acid (ABA) and hydrogen peroxide (H2 O2 ) using two specific protein inhibitors of HSP90 (geldanamycin (GDA) and radicicol (RAD)).",10.1111/nph.16346/3
+further investigation,identify mecatalase1 as,protein,POSITIVE,CERTAINTY,,Further investigation identifies MeWRKY20 and MeCatalase1 as MeHSP90.9-interacting proteins.,10.1111/nph.16346/5
+further investigation,identify mewrky20 as,protein,POSITIVE,CERTAINTY,,Further investigation identifies MeWRKY20 and MeCatalase1 as MeHSP90.9-interacting proteins.,10.1111/nph.16346/5
 
 
 

@@ -139,18 +139,18 @@ Here is an example of running full end-to-end cloud-integrated pipeline to build
 We assume that folders `logs, config` and relevant subfolders that contain configuration files have been created inside the directory with the executable .JAR file. Deafult logger configuration assumes that all application logs will be written into `logs` folder.
 
 ```
-java -jar glomicave-kg 
---cfg_s3 "./config/s3/aws_s3_config.xml" 
---cfg_sqldb "./config/sqldb/aws_athena_config.xml" 
---cfg_graphdb "./config/graphdb/graphdb_config.xml" 
---gene_ontology "raw/data/ontologies/nle-bio-kg/gene-info.csv" 
---ec_codes "raw/data/ontologies/ec-codes/ec-enzymes.csv" 
---extra_ontology "raw/data/ontologies/wp-annotations/wp-manually-annotated.csv" 
---traits "raw/data/phenotypes/wp4_traits.csv" 
---wp "raw/data/wikipathways/wikipathways-20220110-rdf-wp/wp/" 
---dois "raw/data/publications/publication-dois.txt" 
---threads 5 
---cfg_logs "./config/log4j2.xml"
+java -jar glomicave-kg.jar \
+--cfg_s3 "./config/s3/aws_s3_config.xml" \
+--cfg_sqldb "./config/sqldb/aws_athena_config.xml" \
+--cfg_graphdb "./config/graphdb/graphdb_config.xml" \
+--gene_ontology "raw/data/ontologies/nle-bio-kg/gene-info.csv" \
+--ec_codes "raw/data/ontologies/ec-codes/ec-enzymes.csv" \
+--extra_ontology "raw/data/ontologies/wp-annotations/wp-manually-annotated.csv" \
+--traits "raw/data/phenotypes/wp4_traits.csv" \
+--wp "raw/data/wikipathways/wikipathways-20220110-rdf-wp/wp/" \
+--dois "raw/data/publications/publication-dois.txt" \
+--threads 5 \
+--cfg_logs "./config/log4j2.xml" \
 full
 ```
 
@@ -169,14 +169,14 @@ This pipline version can be used when we need to integrate data from extra ontol
 List of entities from external ontologies should be provided in a CSV-file of a special structure (see file format examples). Data from each ontology should be passed in a separate file using `--extra_ontology` option.
 
 ```
-java -jar glomicave-kg 
--a 
---cfg_s3 "./config/s3/aws_s3_config.xml" 
---cfg_graphdb "./config/graphdb/graphdb_config.xml" 
---extra_ontology "raw/data/ontologies/chebi/chebi_compounds-file_to_upload.csv" 
---extra_ontology "raw/data/ontologies/uniprot/uniprotkb_reviewed_true_2024_02_23-file_to_upload.csv" 
---threads 11 
---cfg_logs "./config/log4j2.xml"
+java -jar glomicave-kg.jar \
+-a \
+--cfg_s3 "./config/s3/aws_s3_config.xml" \
+--cfg_graphdb "./config/graphdb/graphdb_config.xml" \
+--extra_ontology "raw/data/ontologies/chebi/chebi_compounds-file_to_upload.csv" \
+--extra_ontology "raw/data/ontologies/uniprot/uniprotkb_reviewed_true_2024_02_23-file_to_upload.csv" \
+--threads 11 \
+--cfg_logs "./config/log4j2.xml" \
 addOntology
 ```
 
@@ -195,15 +195,15 @@ You can add new seed DOIs that should be added to the currently uploaded into th
 List of DOIs of new papers should be recorded into a text file (one DOI per row, see file format examples) and provided using `--dois` option.
 
 ```
-java -jar glomicave-kg 
---cfg_s3 "./config/s3/aws_s3_config.xml"  
---cfg_sqldb "./config/sqldb/aws_athena_config.xml" 
---cfg_graphdb "./config/graphdb/graphdb_config.xml" 
---dois "raw/data/publications/updates/publications-add-1.txt" 
---nrefs 10 
---ncits 10
+java -jar glomicave-kg.jar \ 
+--cfg_s3 "./config/s3/aws_s3_config.xml" \
+--cfg_sqldb "./config/sqldb/aws_athena_config.xml" \
+--cfg_graphdb "./config/graphdb/graphdb_config.xml" \
+--dois "raw/data/publications/updates/publications-add-1.txt" \
+--nrefs 10 \
+--ncits 10 \
 --threads 10 
---cfg_logs "./config/log4j2.xml"
+--cfg_logs "./config/log4j2.xml" \
 addPublications
 ```
 
@@ -217,11 +217,11 @@ This pipline version is used to integrate text-mined facts obtained using Open I
 List of OpenIE-mined facts should be provided in a CSV-file of a special structure (see file format examples) using `--facts` option.
 
 ```
-java -jar glomicave-kg 
---cfg_s3 "./config/s3/aws_s3_config.xml"  
---cfg_graphdb "./config/graphdb/graphdb_config.xml" 
---facts "raw/data/openie/triples_final.csv" 
---cfg_logs "./config/log4j2.xml"
+java -jar glomicave-kg.jar \
+--cfg_s3 "./config/s3/aws_s3_config.xml" \
+--cfg_graphdb "./config/graphdb/graphdb_config.xml" \
+--facts "raw/data/openie/triples_final.csv" \
+--cfg_logs "./config/log4j2.xml" \
 loadFacts
 ```
 
@@ -233,11 +233,11 @@ This pipline version can be used when we need to add phenotypic traits/phenotype
 List of traits should be provided in a CSV-file of a special structure (see file format examples) using `--traits` option.
 
 ```
-java -jar glomicave-kg 
---cfg_s3 "./config/s3/aws_s3_config.xml"  
---cfg_graphdb "./config/graphdb/graphdb_config.xml" 
---traits "raw/data/phenotypes/wp4_traits.csv" 
---cfg_logs "./config/log4j2.xml"
+java -jar glomicave-kg.jar \
+--cfg_s3 "./config/s3/aws_s3_config.xml" \
+--cfg_graphdb "./config/graphdb/graphdb_config.xml" \
+--traits "raw/data/phenotypes/wp4_traits.csv" \
+--cfg_logs "./config/log4j2.xml" \
 addTraits
 ```
 
@@ -287,18 +287,18 @@ We assume that all data are stored on the local machine, folders `logs, config` 
 Make sure that you have provided `-l` to run all parts of the pipeline on a local server.
 
 ```
-java -jar glomicave-kg 
--l
---cfg_sqldb "./config/sqldb/sqldb_config.xml" 
---cfg_graphdb "./config/graphdb/graphdb_config.xml" 
---gene_ontology "../data/ontologies/gene_ontology/nle-bio-kg/gene-info.csv" 
---ec_codes "../data/ontologies/ec-numbers/ec-enzymes.csv" 
---extra_ontology "../data/ontologies/extra_ontologies/wp-annotations/wp-manually-annotated.csv" 
---traits "../data/phenotypes/wp4_traits.csv" 
---wp "../data/ontologies/wikipathways/wikipathways-20220110-rdf-wp/wp/" 
---dois "../data/publications/dois/publication-init-dois.csv" 
---threads 11 
---cfg_logs "./config/log4j2.xml"
+java -jar glomicave-kg.jar \
+-l \
+--cfg_sqldb "./config/sqldb/sqldb_config.xml" \
+--cfg_graphdb "./config/graphdb/graphdb_config.xml" \
+--gene_ontology "../data/ontologies/gene_ontology/nle-bio-kg/gene-info.csv" \
+--ec_codes "../data/ontologies/ec-numbers/ec-enzymes.csv" \
+--extra_ontology "../data/ontologies/extra_ontologies/wp-annotations/wp-manually-annotated.csv" \
+--traits "../data/phenotypes/wp4_traits.csv" \
+--wp "../data/ontologies/wikipathways/wikipathways-20220110-rdf-wp/wp/" \
+--dois "../data/publications/dois/publication-init-dois.csv" \
+--threads 11 \
+--cfg_logs "./config/log4j2.xml" \
 full
 ```
 
@@ -310,13 +310,13 @@ This pipline version can be used when we need to integrate data from extra ontol
 List of entities from external ontologies should be provided in a CSV-file of a special structure (see file format examples). Data from each ontology should be passed in a separate file using `--extra_ontology` option.
 
 ```
-java -jar glomicave-kg 
--l 
---cfg_graphdb "./config/graphdb/graphdb_config.xml" 
---extra_ontology "../data/ontologies/extra_ontologies/uniprot/uniprotkb_reviewed_true_2024_02_23-file_to_upload.csv" 
---extra_ontology "../data/ontologies/extra_ontologies/chebi/chebi_compounds-file_to_upload.csv" 
---threads 11 
---cfg_logs "./config/log4j2.xml"
+java -jar glomicave-kg.jar \
+-l \
+--cfg_graphdb "./config/graphdb/graphdb_config.xml" \
+--extra_ontology "../data/ontologies/extra_ontologies/uniprot/uniprotkb_reviewed_true_2024_02_23-file_to_upload.csv" \
+--extra_ontology "../data/ontologies/extra_ontologies/chebi/chebi_compounds-file_to_upload.csv" \
+--threads 11 \
+--cfg_logs "./config/log4j2.xml" \
 addOntology
 ```
 
@@ -327,15 +327,15 @@ This pipline version can be used when we need to update the knowledge graph with
 List of DOIs of new papers should be recorded into a text file (one DOI per row, see file format examples) and provided using `--dois` option.
 
 ```
-java -jar glomicave-kg 
--l
---cfg_sqldb "./config/sqldb/sqldb_config.xml" 
---cfg_graphdb "./config/graphdb/graphdb_config.xml" 
---dois "../data/publications/dois/updates/publications-add-2.txt"
---nrefs 10 
---ncits 10
---threads 10 
---cfg_logs "./config/log4j2.xml"
+java -jar glomicave-kg.jar \
+-l \
+--cfg_sqldb "./config/sqldb/sqldb_config.xml" \
+--cfg_graphdb "./config/graphdb/graphdb_config.xml" \
+--dois "../data/publications/dois/updates/publications-add-2.txt" \
+--nrefs 10 \
+--ncits 10 \
+--threads 10 \
+--cfg_logs "./config/log4j2.xml" \
 addPublications
 ```
 
@@ -347,11 +347,11 @@ This pipline version is used to integrate text-mined facts obtained using OpenIE
 List of OpenIE-mined facts should be provided in a CSV-file of a special structure (see file format examples) using `--facts` option.
 
 ```
-java -jar glomicave-kg 
--l
---cfg_graphdb "./config/graphdb/graphdb_config.xml" 
---facts "../data/openie/2023-10/triples_final.csv" 
---cfg_logs "./config/log4j2.xml"
+java -jar glomicave-kg.jar \
+-l \
+--cfg_graphdb "./config/graphdb/graphdb_config.xml" \
+--facts "../data/openie/2023-10/triples_final.csv" \
+--cfg_logs "./config/log4j2.xml" \
 loadFacts
 ```
 
@@ -363,11 +363,11 @@ This pipline version can be used when we need to add phenotypic traits/phenotype
 List of traits should be provided in a CSV-file of a special structure (see file format examples) using `--traits` option.
 
 ```
-java -jar glomicave-kg 
--l
---cfg_graphdb "./config/graphdb/graphdb_config.xml" 
---traits "../data/phenotypes/wp4_traits.csv" 
---cfg_logs "./config/log4j2.xml"
+java -jar glomicave-kg.jar \
+-l \
+--cfg_graphdb "./config/graphdb/graphdb_config.xml" \
+--traits "../data/phenotypes/wp4_traits.csv" \
+--cfg_logs "./config/log4j2.xml" \
 addTraits
 ```
 
@@ -498,10 +498,10 @@ Each row contains information about a single entity recorded in columns:
 
 Example:
 ```
-source,category,uid,name,syn_0,syn_1,syn_2,syn_3,syn_4,syn_5,syn_6,syn_7
+source,category,uid,name,syn_0,syn_1,syn_2,syn_3,syn_4,syn_5,syn_6
 UNIPROT,PROTEIN,A0A009IHW8,ABTIR_ACIB9,2' cyclic ADP-D-ribose synthase AbTIR,2'cADPR synthase AbTIR,EC 3.2.2.-,NAD(+) hydrolase AbTIR,EC 3.2.2.6,TIR domain-containing protein in A.baumannii,AbTIR
-UNIPROT,PROTEIN,A0A023I7E1,ENG1_RHIMI,"Glucan endo-1,3-beta-D-glucosidase 1","Endo-1,3-beta-glucanase 1",EC 3.2.1.39,Laminarinase,RmLam81A,,,
-UNIPROT,PROTEIN,A0A024SC78,CUTI1_HYPJR,Cutinase,EC 3.1.1.74,,,,,,
+UNIPROT,PROTEIN,A0A023I7E1,ENG1_RHIMI,"Glucan endo-1,3-beta-D-glucosidase 1","Endo-1,3-beta-glucanase 1",EC 3.2.1.39,Laminarinase,RmLam81A,,
+UNIPROT,PROTEIN,A0A024SC78,CUTI1_HYPJR,Cutinase,EC 3.1.1.74,,,,,
 ```
 
 ### Phenotypes/Traits
@@ -536,12 +536,12 @@ DOIs should be provided in a text file, each doi should be exactly of the follow
 
 ```
 
-**Note.** In case record contains extra symbols, like *https://doi.org/* or *doi.org* it will be considered as a separate record and may cause duplication of the information in the database.
+**Note.** In case record contains extra symbols, like *https\://doi.org/* or *doi.org* it will be considered as a separate record and may cause duplication of the information in the database.
 
 
 ### OpenIE-derived facts
 
-Text-mined facts are normally represanted by OpenIE systems as triples of (Subject, Relation, Object). Here we describe the structure of a comma-separated CSV-file that should be used to integrate OpenIE-derived facts into the knowledge graph:
+Text-mined facts are normally represanted by OpenIE systems as triples `(Subject, Relation, Object)`. Here we describe the structure of a comma-separated CSV-file that should be used to integrate OpenIE-derived facts into the knowledge graph:
 
 `Subject, Relation, Object, Polarity, Modality, Attribution, Sentence, SentenceUID`
 
@@ -567,5 +567,7 @@ further investigation,identify mewrky20 as,protein,POSITIVE,CERTAINTY,,Further i
 
 ## Building docker image and running the tool from docker container
 
+The whole application can be dockerized and executed inside a Docker container.
 
-TBD
+To build and run the app inside a Docker container suitable Java environment is needed. We tested the application with `eclipse-temurin:17-jdk-jammy` as a base Docker image.
+

@@ -581,7 +581,5 @@ Check Assets folder for pre-compiled executable .JAR file: https://github.com/ne
 
 NEC Laboratories Europe GmbH, Copyright (c) 2024, All rights reserved.
 
-Developers: 
-* [Roman Siarheyeu](mailto:raman.siarheyeu@neclab.eu): raman.siarheyeu@neclab.eu
-* [Kiril Gashteovski](mailto:kiril.gashteovski@neclab.eu): kiril.gashteovski@neclab.eu
+Developers: [Roman Siarheyeu](mailto:raman.siarheyeu@neclab.eu), [Kiril Gashteovski](mailto:kiril.gashteovski@neclab.eu).
 

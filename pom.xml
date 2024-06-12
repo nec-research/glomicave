@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>Glomicave</groupId>
-  <artifactId>Glomicave</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <groupId>glomicave-kg</groupId>
+  <artifactId>glomicave-kg</artifactId>
+  <version>1.0</version>
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
@@ -41,7 +41,7 @@
 			</exclusion> 
 		  </exclusions> 
 		</dependency>
-
+		
 		<!-- https://mvnrepository.com/artifact/it.unimi.dsi/fastutil -->
 		<!-- For the token search -->
 		<dependency>
@@ -49,7 +49,7 @@
 		    <artifactId>fastutil</artifactId>
 		    <version>8.1.0</version>
 		</dependency>
-		
+
 		<dependency>
 		    <groupId>edu.stanford.nlp</groupId>
 		    <artifactId>stanford-corenlp</artifactId>
@@ -76,6 +76,7 @@
 		    <artifactId>jena-text</artifactId>
 		    <version>4.2.0</version>
 		</dependency>
+
 	
 		<dependency>
 		    <groupId>org.junit.jupiter</groupId>
@@ -83,20 +84,21 @@
 		    <version>5.0.0-M5</version>
 		</dependency>
 
+
 		<dependency>
 		    <groupId>com.opencsv</groupId>
 		    <artifactId>opencsv</artifactId>
 		    <version>4.1</version>
 		</dependency>
 	
-			<!-- Added for MinIE integration -->
+		<!-- Added for MinIE integration 
 		<dependency>
 		    <groupId>it.unimi.dsi</groupId>
 		    <artifactId>fastutil</artifactId>
 		    <version>8.1.0</version>
-		</dependency>
+		</dependency>-->
 		
-			<!-- Added for AWS SDK -->
+		<!-- Added for AWS SDK -->
 			
 		<dependency>
             <groupId>software.amazon.awssdk</groupId>
@@ -123,22 +125,20 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-		<!-- Dependencies for using logging -->
                 
-           <dependency>
+        <dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
 		    <artifactId>log4j</artifactId>
 		    <version>2.20.0</version>
 		    <type>pom</type>
-		  </dependency>
+		</dependency>
                 
                         
-          <dependency>
+        <dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
 		    <artifactId>log4j-api</artifactId>
 		    <version>2.20.0</version>
-		  </dependency>
+		</dependency>
         
         <dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
@@ -150,7 +150,9 @@
 		    <groupId>org.apache.logging.log4j</groupId>
 		    <artifactId>log4j-slf4j-impl</artifactId>
 		    <version>2.20.0</version>
-		  </dependency>    
+		  </dependency> 
+
+        <!-- AWS Athena dependencies -->
 		
 		<dependency>
             <groupId>software.amazon.awssdk</groupId>
@@ -169,6 +171,7 @@
 
 	<!-- Added for AWS SDK -->
 
+
    <dependencyManagement>
         <dependencies>
             <dependency>
@@ -181,26 +184,71 @@
         </dependencies>
     </dependencyManagement>
 
-	<!-- Added for compilation -->
+
+	<!-- Compilation, build an executable JAR -->
 
 	<build>
-	  <plugins>
-	    <plugin>
-	      <!-- Build an executable JAR -->
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-jar-plugin</artifactId>
-	      <version>3.1.0</version>
-	      <configuration>
-	        <archive>
-	          <manifest>
-	            <addClasspath>true</addClasspath>
-	            <classpathPrefix>lib/</classpathPrefix>
-	            <mainClass>eu.glomicave.GlomicaveKG</mainClass>
-	          </manifest>
-	        </archive>
-	      </configuration>
-	    </plugin>
-	  </plugins>
+	    <plugins>
+	        <!--
+	        https://maven.apache.org/plugins/maven-compiler-plugin/
+	        The Compiler Plugin is used to compile the sources of your project.
+	        -->
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-compiler-plugin</artifactId>
+	            <version>3.6.1</version>
+	            <configuration>
+	                <release>17</release>
+	                <showDeprecation>true</showDeprecation>
+	                <showWarnings>true</showWarnings>
+	                <verbose>false</verbose>
+	            </configuration>
+	        </plugin>
+	
+	        <!--
+	        https://maven.apache.org/plugins/maven-jar-plugin/
+	        This plugin provides the capability to build (executable) jars and is used here to set the mainClass
+	        which will start the application.
+	        -->
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-jar-plugin</artifactId>
+	            <version>3.1.1</version>
+	            <configuration>
+	                <archive>
+	                    <manifest>
+	                        <mainClass>eu.glomicave.GlomicaveKG</mainClass>
+	                    </manifest>
+	                </archive>
+	            </configuration>
+	        </plugin>
+	
+	        <!--
+	        https://maven.apache.org/plugins/maven-shade-plugin/
+	        This plugin provides the capability to package the artifact in an uber-jar, including its dependencies and
+	        to shade - i.e. rename - the packages of some of the dependencies. The transformer will combine the files
+	        in the META-INF.services directories of multiple Pi4J plugins with the same package name into one file.
+	        -->
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-shade-plugin</artifactId>
+	            <version>3.6.0</version>
+	            <configuration>
+	                <transformers>
+	                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+	                </transformers>
+	            </configuration>
+	            <executions>
+	                <execution>
+	                    <phase>package</phase>
+	                    <goals>
+	                        <goal>shade</goal>
+	                    </goals>
+	                </execution>
+	            </executions>
+	        </plugin>
+	    </plugins>
+	    
 	</build>
 
 </project>

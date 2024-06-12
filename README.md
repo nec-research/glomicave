@@ -13,7 +13,7 @@ We provide our code under GPL-3 license (https://www.gnu.org/licenses/gpl-3.0.ht
 
 ## Java version
 
-JavaSE-15 (tested with Java SE 17.0.3).
+JavaSE-15 (tested with JRE 'Java SE 17.0.3').
 
 
 ## Pipeline versions
@@ -556,9 +556,41 @@ further investigation,identify mewrky20 as,protein,POSITIVE,CERTAINTY,,Further i
 
 ## Building Docker image and running the tool from Docker container
 
-The whole application can be dockerized and executed inside a Docker container.
+The whole application can be dockerized and executed inside a Docker container. Here we provide a sample Dockerfile that helps to create a Docker container and run the pipeline assuming that you have already tested connections to the running instances of SQL (or Amazon Athena) and graph databases.
 
 To build and run the app inside a Docker container suitable Java environment is needed. We tested the application with `eclipse-temurin:17-jdk-jammy` as a base Docker image.
+
+To build a Docker image according to the provided Dockerfile run bash script `build_docker_w_neo4j.sh` in the copied repo directory. Based on that image, you can run the Docker container using script `run_docker_w_neo4j.sh`. We assume that AWS `config` and `credentials` are stored inside `~/.aws` on your machine.
+
+Run the following command inside the running container to compile the application:
+```
+./mvnw clean compile
+```
+
+To run the whole pipeline in test mode execute:
+```
+./mvnw exec:java \
+-Dexec.mainClass=eu.glomicave.GlomicaveKG \
+-Dexec.args="\
+-a \
+--cfg_s3 "./config/s3/aws_s3_config.xml" \
+--cfg_sqldb "./config/sqldb/aws_athena_config.xml" \
+--cfg_graphdb "./config/graphdb/graphdb_config_macos-docker.xml" \
+--gene_ontology "raw/data/ontologies/nle-bio-kg/gene-info.csv" \
+--ec_codes "raw/data/ontologies/ec-codes/ec-enzymes.csv" \
+--extra_ontology "raw/data/ontologies/wp-annotations/wp-manually-annotated.csv" \
+--traits "raw/data/phenotypes/wp4_traits.csv" \
+--wp "raw/data/wikipathways/wikipathways-20220110-rdf-wp/wp/" \
+--dois "raw/data/publications/publication-dois.txt" \
+--threads 5 \
+--cfg_logs "./config/log4j2.xml" \
+full"
+```
+
+Alternatively, you can build flat executable .JAR inside the container using the command:
+```
+./mvnw clean package
+```
 
 
 ## Executable files

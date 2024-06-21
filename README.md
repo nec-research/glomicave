@@ -560,7 +560,7 @@ The whole application can be dockerized and executed inside a Docker container. 
 
 To build and run the app inside a Docker container suitable Java environment is needed. We tested the application with `eclipse-temurin:17-jdk-jammy` as a base Docker image.
 
-To build a Docker image according to the provided Dockerfile run bash script `build_docker_w_neo4j.sh` in the copied repo directory. Based on that image, you can run the Docker container using script `run_docker_w_neo4j.sh`. We assume that AWS `config` and `credentials` are stored inside `~/.aws` on your machine.
+To build a Docker image according to the provided Dockerfile run bash script `build_docker_w_neo4j.sh` inside the copied repo directory. Based on that image, you can run the Docker container using script `run_docker_w_neo4j.sh`. We assume that AWS `config` and `credentials` are stored inside `~/.aws` on your machine.
 
 Run the following command inside the running container to compile the application:
 ```

@@ -17,7 +17,8 @@ ARG WORKDIR=/app
 WORKDIR ${WORKDIR}
 
 #Install tools to build Java code 
-RUN apt install -y maven
+RUN apt-get update
+RUN apt-get install -y maven
 RUN mvn wrapper:wrapper
 COPY pom.xml ./
 

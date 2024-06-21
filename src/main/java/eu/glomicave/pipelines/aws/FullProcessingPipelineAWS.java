@@ -1,31 +1,3 @@
-/* 
-* GLOMICAVE-KG 
-* 
-* file: FullProcessingPipelineAWS.java
-* 
-* Authors: 	Roman Siarheyeu (raman.siarheyeu@neclab.eu) 
-* 			Kiril Gashteovski (kiril.gashteovski@neclab.eu) 
-*
-* Copyright (c) 2024 NEC Laboratories Europe GmbH All Rights Reserved. 
-* 
-* NEC Laboratories Europe GmbH DISCLAIMS ALL WARRANTIES, EITHER EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY 
-* AND FITNESS FOR A PARTICULAR PURPOSE AND THE WARRANTY AGAINST LATENT 
-* DEFECTS, WITH RESPECT TO THE PROGRAM AND THE ACCOMPANYING 
-* DOCUMENTATION. 
-* 
-* NO LIABILITIES FOR CONSEQUENTIAL DAMAGES:
-* IN NO EVENT SHALL NEC Laboratories Europe GmbH or ANY OF ITS SUBSIDIARIES BE
-* LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES
-* FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF INFORMATION, OR 
-* OTHER PECUNIARY LOSS AND INDIRECT, CONSEQUENTIAL, INCIDENTAL, 
-* ECONOMIC OR PUNITIVE DAMAGES) ARISING OUT OF THE USE OF OR INABILITY 
-* TO USE THIS PROGRAM, EVEN IF NEC Laboratories Europe GmbH HAS BEEN ADVISED OF
-* THE POSSIBILITY OF SUCH DAMAGES. 
-* 
-* THIS HEADER MAY NOT BE EXTRACTED OR MODIFIED IN ANY WAY. 
-*/
-
 /**
  * This script executes full processing pipeline to reset and to populate Glomicave knowledge graph (AWS cloud version).
  *
@@ -58,7 +30,7 @@ public class FullProcessingPipelineAWS {
 	
 	public static void run(boolean abridge, String cfg_s3_file, String cfg_sqldb_file, String cfg_graphdb_file, 
 							String gene_ontology_file, String ec_codes_file, String[] extra_ontologies_files, 
-								String traits_file, String wp_dir, String dois_file, int nrefs, int ncits) throws Exception {
+								String traits_file, String wp_dir, String dois_file, int nrefs, int ncits, int step_number) throws Exception {
 		
 		// Assign default parameters
 		if (cfg_s3_file == null) {
@@ -132,11 +104,17 @@ public class FullProcessingPipelineAWS {
 		setupAmazonS3Connection(cfg_s3_file);
 
 		setupDatabaseConnections(cfg_sqldb_file, cfg_graphdb_file);
+		
+		if (step_number <= 1) {
+			resetDatabases();
+		}
 
-		resetDatabases();
+		// Steps 1 - 5
+		if (step_number <= 5) {
+			loadNEAndWP3Data(abridge, gene_ontology_file, ec_codes_file, extra_ontologies_files, traits_file, wp_dir);
+		}
 
-		loadNEAndWP3Data(abridge, gene_ontology_file, ec_codes_file, extra_ontologies_files, traits_file, wp_dir);
-
+		// Steps 6 - 7
 		loadPublicationsData(abridge, dois_file, nrefs, ncits);
 
 		CoreGraphDatabase.closeDriver();
@@ -174,19 +152,19 @@ public class FullProcessingPipelineAWS {
 	public static void loadNEAndWP3Data(boolean abridge, String gene_ontology_file, 
 								String ec_codes_file, String[] extra_ontologies_files, 
 										String traits_file, String wp_dir) throws Exception {
-		// Add NEs to graph database
+		// Step 1: Add NEs to graph database
 		addNamedEntitiesFromGeneOntologyS3CSV(abridge, gene_ontology_file);
 		
-		// Add EC enzyme nomenclature
+		// Step 2: Add EC enzyme nomenclature
 		addNamedEntitiesFromECEnzymesS3CSV(abridge, ec_codes_file);
 		
-		// Insert trait data from WP4	
+		// Step 3: Insert trait data from WP4	
 		IntegrateWP4Traits.addTraitsFromS3CSV(abridge, traits_file);
 		
-		// Insert Wikipathways data			
+		// Step 4: Insert Wikipathways data			
 		LoadWikipathwaysIntoGraphDB.loadWikipathwaysS3IntoGraphDB(abridge, wp_dir);
 		
-		// Add manually curated NEs and lexical forms for uploaded wikipathway entities
+		// Step 5: Add manually curated NEs and lexical forms for uploaded wikipathway entities
 		addExtraNamedEntitiesS3CSV(abridge, extra_ontologies_files);
 	}
 

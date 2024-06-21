@@ -32,10 +32,12 @@ public class SemanticScholarAPI {
 	// url string for batch requests, max 200-1000 paper a time
 	private static final String API_URL_BATCH = "https://api.semanticscholar.org/graph/v1/paper/";
 	
-	private static int sleepTime = 100;
+	private static final int DEFAULT_SLEEP_TIME = 100;
+	
+	private static int sleepTime = DEFAULT_SLEEP_TIME;
 
 	private static void sleep() {
-		// Sleep between two queries to not violate the limit of 100 queries per 5 minutes (i.e. 1 query / 3 seconds).
+		// Sleep between two queries to not violate the limit of 5,000 queries per 5 minutes (i.e. 16 query / seconds).
 		try {
 			Thread.sleep(sleepTime);
 		} catch (InterruptedException e) {
@@ -43,6 +45,13 @@ public class SemanticScholarAPI {
 		}
 	}
 
+	/** Main method to get info about publication.
+	 * 
+	 * @param doi
+	 * @param sleep
+	 * @return
+	 * @throws Exception
+	 */
 	public static JSONObject querySemanticScholar(String doi, boolean sleep) throws Exception {
 		if (sleep) {
 			sleep();
@@ -54,7 +63,23 @@ public class SemanticScholarAPI {
 		con.setRequestProperty("Content-Type", "application/json");
 
 		int status = con.getResponseCode();
+		
+		// if too many requests, try to increase sleep time
+		while (status == 429) {
+			con.disconnect();
+			
+			sleepTime += 100;
+			sleep();
+			
+			// repeat query
+			con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setRequestProperty("Content-Type", "application/json");
 
+			status = con.getResponseCode();
+		}
+
+		// read data from response
 		if (status >= 300) {
 			String response = readInputStream(con.getErrorStream());
 			con.disconnect();
@@ -71,13 +96,17 @@ public class SemanticScholarAPI {
 				return null;
 			}
 
+			if (sleepTime > DEFAULT_SLEEP_TIME + 50) {
+				sleepTime -= 50;
+			}
+			
 			JSONObject jsonObject = new JSONObject(response);
 			return jsonObject;
 		}
 	}
 	
 	/**
-	 * Bath request to SemanticScholarAPI.
+	 * Do request to SemanticScholarAPI.
 	 * 
 	 * @param dois
 	 * @param sleep
@@ -148,7 +177,15 @@ public class SemanticScholarAPI {
 	public static JSONObject getReferences(String doi, boolean sleep) throws Exception {
 		return getCitationsAndReferences(doi, "references", sleep);
 	}
-
+	
+	/** Main method to get references and citations.
+	 * 
+	 * @param doi
+	 * @param citationsReferences
+	 * @param sleep
+	 * @return
+	 * @throws Exception
+	 */
 	private static JSONObject getCitationsAndReferences(String doi, String citationsReferences, boolean sleep) throws Exception {
 		if (sleep) {
 			sleep();
@@ -160,7 +197,23 @@ public class SemanticScholarAPI {
 		con.setRequestProperty("Content-Type", "application/json");
 
 		int status = con.getResponseCode();
+		
+		// if too many requests, try to increase sleep time
+		while (status == 429) {
+			con.disconnect();
+			
+			sleepTime += 100;
+			sleep();
+			
+			// repeat query
+			con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setRequestProperty("Content-Type", "application/json");
 
+			status = con.getResponseCode();
+		}
+		
+		// read data from response
 		if (status >= 300) {
 			String response = readInputStream(con.getErrorStream());
 			con.disconnect();
@@ -173,6 +226,10 @@ public class SemanticScholarAPI {
 		else {
 			String response = readInputStream(con.getInputStream());
 			con.disconnect();
+			
+			if (sleepTime > DEFAULT_SLEEP_TIME + 50) {
+				sleepTime -= 50;
+			}
 
 			JSONObject jsonObject = new JSONObject(response);
 			return jsonObject;
@@ -190,7 +247,23 @@ public class SemanticScholarAPI {
 		con.setRequestProperty("Content-Type", "application/json");
 
 		int status = con.getResponseCode();
+		
+		// if too many requests, try to increase sleep time
+		while (status == 429) {
+			con.disconnect();
+			
+			sleepTime += 100;
+			sleep();
+			
+			// repeat query
+			con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setRequestProperty("Content-Type", "application/json");
 
+			status = con.getResponseCode();
+		}
+		
+		// read data from response
 		if (status >= 300) {
 			String response = readInputStream(con.getErrorStream());
 			con.disconnect();
@@ -203,6 +276,10 @@ public class SemanticScholarAPI {
 		else {
 			String response = readInputStream(con.getInputStream());
 			con.disconnect();
+			
+			if (sleepTime > DEFAULT_SLEEP_TIME + 50) {
+				sleepTime -= 50;
+			}
 
 			JSONObject jsonObject = new JSONObject(response);
 

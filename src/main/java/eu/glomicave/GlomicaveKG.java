@@ -1,42 +1,9 @@
-/* 
-* GLOMICAVE-KG 
-* 
-* file: GlomicaveKG.java
-* 
-* Authors: 	Roman Siarheyeu (raman.siarheyeu@neclab.eu) 
-* 			Kiril Gashteovski (kiril.gashteovski@neclab.eu) 
-*
-* Copyright (c) 2024 NEC Laboratories Europe GmbH All Rights Reserved. 
-* 
-* NEC Laboratories Europe GmbH DISCLAIMS ALL WARRANTIES, EITHER EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY 
-* AND FITNESS FOR A PARTICULAR PURPOSE AND THE WARRANTY AGAINST LATENT 
-* DEFECTS, WITH RESPECT TO THE PROGRAM AND THE ACCOMPANYING 
-* DOCUMENTATION. 
-* 
-* NO LIABILITIES FOR CONSEQUENTIAL DAMAGES:
-* IN NO EVENT SHALL NEC Laboratories Europe GmbH or ANY OF ITS SUBSIDIARIES BE
-* LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES
-* FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF INFORMATION, OR 
-* OTHER PECUNIARY LOSS AND INDIRECT, CONSEQUENTIAL, INCIDENTAL, 
-* ECONOMIC OR PUNITIVE DAMAGES) ARISING OUT OF THE USE OF OR INABILITY 
-* TO USE THIS PROGRAM, EVEN IF NEC Laboratories Europe GmbH HAS BEEN ADVISED OF
-* THE POSSIBILITY OF SUCH DAMAGES. 
-* 
-* THIS HEADER MAY NOT BE EXTRACTED OR MODIFIED IN ANY WAY. 
-*/
-
 /** 
  * This is the main class that provides command-line interface to run Glomicave knowledge graph creation.
  * 
  */
 
 package eu.glomicave;
-
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
 import java.io.File;
 import java.util.Arrays;
@@ -46,18 +13,20 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 
 import eu.glomicave.config.GlobalParamsConfig;
-
-import eu.glomicave.pipelines.aws.FullProcessingPipelineAWS;
-import eu.glomicave.pipelines.aws.AddPublicationsAWS;
 import eu.glomicave.pipelines.aws.AddOntologyAWS;
 import eu.glomicave.pipelines.aws.AddPhenotypesAWS;
+import eu.glomicave.pipelines.aws.AddPublicationsAWS;
+import eu.glomicave.pipelines.aws.FullProcessingPipelineAWS;
 import eu.glomicave.pipelines.aws.LoadOIEFactsAWS;
-
-import eu.glomicave.pipelines.local.FullProcessingPipelineLocal;
-import eu.glomicave.pipelines.local.AddPublicationsLocal;
 import eu.glomicave.pipelines.local.AddOntologyLocal;
 import eu.glomicave.pipelines.local.AddPhenotypesLocal;
+import eu.glomicave.pipelines.local.AddPublicationsLocal;
+import eu.glomicave.pipelines.local.FullProcessingPipelineLocal;
 import eu.glomicave.pipelines.local.LoadOIEFactsLocal;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 
 @Command(name = "glomicave-kg", mixinStandardHelpOptions = true, version = "glomicave-kg 1.0",
@@ -84,6 +53,11 @@ public class GlomicaveKG implements Callable<Integer> {
 				+ "This will prevent writing new publication data into Athena tables."
 				+ "The option has effect only with 'addPublications' cloud pipeline.")
 		private boolean integrateOnly = false; // when false, run all steps in the pipeline
+		
+		// continue from step
+		
+		@Option(names = {"-s", "--step"}, description = "Max number of threads to execute in parallel.")
+		private int step_number = 1; // default start step is '1' (whole pipeline) 
 		
 		// multi-threading
 		
@@ -188,7 +162,8 @@ public class GlomicaveKG implements Callable<Integer> {
 								wp_dir,
 								dois_file,
 								nrefs,
-								ncits);
+								ncits,
+								step_number);
 						break;
 					case "addPublications":
 						AddPublicationsAWS.run(
@@ -286,8 +261,8 @@ public class GlomicaveKG implements Callable<Integer> {
 		
 		
 		public static void main(String... args) throws Exception {			
-			int exitCode = new CommandLine(new GlomicaveKG()).execute(args);
-			System.exit(exitCode);
+	        int exitCode = new CommandLine(new GlomicaveKG()).execute(args);
+	        System.exit(exitCode);
 		}
 
 }

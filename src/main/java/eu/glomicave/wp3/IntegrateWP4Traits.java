@@ -134,6 +134,9 @@ public class IntegrateWP4Traits {
 		//try (CSVReader csvReader = new CSVReader(new BufferedReader(new InputStreamReader(AmazonS3.readFileUsingS3Client(s3filekey))))) {
 		int processed = 0;		
 		
+		// reconnect to S3
+		AmazonS3Config.getInstance().reconnect();
+		
 		try {
 			CSVReader csvReader = new CSVReader(new BufferedReader(new InputStreamReader(AmazonS3.readFileUsingS3Client(s3filekey))));
 			

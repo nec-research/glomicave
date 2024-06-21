@@ -226,6 +226,9 @@ public class NamedEntityInitialization {
 	 
 		logger.info("Start loading ontology from S3 object: {}", s3filekey);
 		
+		// reconnect to S3
+		AmazonS3Config.getInstance().reconnect();
+		
 		int processed = 0;
 		try {
 			CSVReader csvReader = new CSVReader(new BufferedReader(new InputStreamReader(AmazonS3.readFileUsingS3Client(s3filekey))));	
@@ -270,7 +273,7 @@ public class NamedEntityInitialization {
 
 			csvReader.close();
 		} catch(Exception e) {
-			logger.error("Error reading gene entities", e);
+			logger.error("Error reading named entities from S3 object.", e);
 			throw new IOException();
 		}
 		
